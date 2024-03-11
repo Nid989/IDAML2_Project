@@ -1,0 +1,24 @@
+BATCH_SIZE: 2
+NUM_EPOCHS: 20
+MAX_SEQUENCE_LEN: 256
+LEARNING_RATE: 1.0e-4
+WEIGHT_DECAY: 1.0e-6
+EARLY_STOPPING_THRESHOLD: 5
+
+MODELING_TYPE: "transformers"
+# `transformers` or `lstm` or `cnn`
+
+DATASET_NAME: "MultiCoNER2"
+# `BC5CDR` or `MultiCoNER2`
+
+VERSION: "v1"
+# `v1`: tokenclassification
+# `v2`: tokenclassification w/ LC-CRF
+# `v3`: ensemble tokenclassification w/ and w/o LC-CRF
+
+TRANSFORMERS:
+    MODEL_CHECKPOINT: "xlm-roberta-base"
+    MODEL_IMPLEMENTATION: "tokenclassification"
+    # `tokenclassification` or `tokenclassification w/ LC-CRF" or `ensemble tokenclassification w/ and w/o LC-CRF`
+    
+PATH_TO_DATA_DIRECTORY: "./data/"
