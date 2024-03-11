@@ -12,106 +12,106 @@ from transformers import (
 )
 from dataset import BC5CDR, MultiCoNER2
 
-nlp = spacy.load("en_core_web_sm")
+# nlp = spacy.load("en_core_web_sm")
 dataset_types_ = Literal['BC5CDR', 'MultiCoNER2']
 data_types_ = Literal['train', 'valid', 'test']
     
 # NERDataset for LSTM OR CNN based models
-class NERDataset_LSTM_CNN:
-    def __init__(self, dataset_name: dataset_types_=None,
-                 data_type: data_types_="train",
-                 batch_size: int = 8,
-                 use_glove: bool=False, rmv_stopwords: bool=False,
-                 lemmatize: bool=False,
-                 **kwargs):
-        self.modeling_type = "lstm_cnn"
-        self.dataset_name = dataset_name
-        self.data_type = data_type
-        self.rmv_stopwords = rmv_stopwords
-        self.lemmatize = lemmatize
-        self.batch_size = batch_size
-        self._setup(**kwargs)
-        self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-        if use_glove:
-            if "glove_dim" not in kwargs:
-                raise AttributeError("Glove initialization requires the specification of embedding dimension!")
-            else:
-                self.glove = vocab.Gloe(name="6B", dim=kwargs["glove_dim"])
-                self.vocab = vocab(self.glove.stoi)
-                self.vocab.insert_token("<pad>", 0)
-                self.vocab.insert_token("<unk>", 1)
-                self.vocab.set_default_index(0)
-                self.vocab.set_default_index(1)
-        else:
-            self.vocab = self.prepare_vocab()
+# class NERDataset_LSTM_CNN:
+#     def __init__(self, dataset_name: dataset_types_=None,
+#                  data_type: data_types_="train",
+#                  batch_size: int = 8,
+#                  use_glove: bool=False, rmv_stopwords: bool=False,
+#                  lemmatize: bool=False,
+#                  **kwargs):
+#         self.modeling_type = "lstm_cnn"
+#         self.dataset_name = dataset_name
+#         self.data_type = data_type
+#         self.rmv_stopwords = rmv_stopwords
+#         self.lemmatize = lemmatize
+#         self.batch_size = batch_size
+#         self._setup(**kwargs)
+#         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+#         if use_glove:
+#             if "glove_dim" not in kwargs:
+#                 raise AttributeError("Glove initialization requires the specification of embedding dimension!")
+#             else:
+#                 self.glove = vocab.Gloe(name="6B", dim=kwargs["glove_dim"])
+#                 self.vocab = vocab(self.glove.stoi)
+#                 self.vocab.insert_token("<pad>", 0)
+#                 self.vocab.insert_token("<unk>", 1)
+#                 self.vocab.set_default_index(0)
+#                 self.vocab.set_default_index(1)
+#         else:
+#             self.vocab = self.prepare_vocab()
 
-    def _setup(self, **kwargs):
-        if self.dataset_name == "BC5CDR":
-            self.dataset = BC5CDR("./data/bc5cdr_data/")
-        elif self.dataset_name == "MultiCoNER2":
-            if "lang" not in kwargs:
-                lang = "en"
-                print("Selecting `en` as default value for attr. `lang` under MultiCoNER2")
-            else:
-                lang = kwargs["lang"]
-            self.dataset = MultiCoNER2("./data/multiconer2_data/", lang=lang)
-        else:
-            raise ValueError(f"Invalid dataset-name provided, expected dataset-types are {dataset_types_}")
+#     def _setup(self, **kwargs):
+#         if self.dataset_name == "BC5CDR":
+#             self.dataset = BC5CDR("./data/bc5cdr_data/")
+#         elif self.dataset_name == "MultiCoNER2":
+#             if "lang" not in kwargs:
+#                 lang = "en"
+#                 print("Selecting `en` as default value for attr. `lang` under MultiCoNER2")
+#             else:
+#                 lang = kwargs["lang"]
+#             self.dataset = MultiCoNER2("./data/multiconer2_data/", lang=lang)
+#         else:
+#             raise ValueError(f"Invalid dataset-name provided, expected dataset-types are {dataset_types_}")
 
-    def prepare_vocab(self):
-        all_data = list(itertools.chain.from_iterable([getattr(self.dataset, f"{data_type}_data")["tokens"].values.tolist() \
-                    for data_type in ["train", "valid"]]))
-        if self.lemmatize:
-            all_data = [[token.lemma_ for token in nlp(" ".join(instance))] for instance in all_data]
-        _vocab = build_vocab_from_iterator(all_data,
-                                           specials=["<pad>", "<unk>"])
-        return _vocab
+#     def prepare_vocab(self):
+#         all_data = list(itertools.chain.from_iterable([getattr(self.dataset, f"{data_type}_data")["tokens"].values.tolist() \
+#                     for data_type in ["train", "valid"]]))
+#         if self.lemmatize:
+#             all_data = [[token.lemma_ for token in nlp(" ".join(instance))] for instance in all_data]
+#         _vocab = build_vocab_from_iterator(all_data,
+#                                            specials=["<pad>", "<unk>"])
+#         return _vocab
 
-    def preprocess_data(self, data_type: data_types_="train"):
+#     def preprocess_data(self, data_type: data_types_="train"):
 
-        def _map_tokens_to_ids(instance: List[str]):
-            return [self.vocab[token] if token in self.vocab else self.vocab["<unk>"] for token in instance]
+#         def _map_tokens_to_ids(instance: List[str]):
+#             return [self.vocab[token] if token in self.vocab else self.vocab["<unk>"] for token in instance]
 
-        def _map_labels_to_ids(instance: List[str]):
-            return [self.dataset.labels2idx[label] for label in instance]
+#         def _map_labels_to_ids(instance: List[str]):
+#             return [self.dataset.labels2idx[label] for label in instance]
 
-        def _pad_sequence(sequence: List[int], max_length: int=150, padding_token_id: int=0):
-            return sequence[:max_length] + [padding_token_id] * max(0, max_length - len(sequence))
+#         def _pad_sequence(sequence: List[int], max_length: int=150, padding_token_id: int=0):
+#             return sequence[:max_length] + [padding_token_id] * max(0, max_length - len(sequence))
 
-        dataset_split = getattr(self.dataset, f"{data_type}_data")
-        if self.rmv_stopwords:
-            dataset_split["tokens"] = dataset_split.apply(
-                lambda row: [token.text for token in nlp(" ".join(row["tokens"])) if not token.is_stop],
-                axis=1
-            )
-        if self.lemmatize:
-            dataset_split["tokens"] = dataset_split.apply(
-                lambda row: [token.lemma_ for token in nlp(" ".join(row["tokens"]))],
-                axis=1
-            )
-        setattr(self.dataset, f"{data_type}_data", dataset_split)
+#         dataset_split = getattr(self.dataset, f"{data_type}_data")
+#         if self.rmv_stopwords:
+#             dataset_split["tokens"] = dataset_split.apply(
+#                 lambda row: [token.text for token in nlp(" ".join(row["tokens"])) if not token.is_stop],
+#                 axis=1
+#             )
+#         if self.lemmatize:
+#             dataset_split["tokens"] = dataset_split.apply(
+#                 lambda row: [token.lemma_ for token in nlp(" ".join(row["tokens"]))],
+#                 axis=1
+#             )
+#         setattr(self.dataset, f"{data_type}_data", dataset_split)
 
-        model_inputs = dict()
-        source = dataset_split["tokens"].values.tolist()
-        target = dataset_split["labels"].values.tolist()
-        _pad_sequence_partial = functools.partial(_pad_sequence, max_length=150, padding_token_id=0)
-        model_inputs["word_ids"] = list(map(_pad_sequence_partial, list(map(_map_tokens_to_ids, source))))
-        model_inputs["labels"] = list(map(_pad_sequence_partial, list(map(_map_labels_to_ids, target))))
+#         model_inputs = dict()
+#         source = dataset_split["tokens"].values.tolist()
+#         target = dataset_split["labels"].values.tolist()
+#         _pad_sequence_partial = functools.partial(_pad_sequence, max_length=150, padding_token_id=0)
+#         model_inputs["word_ids"] = list(map(_pad_sequence_partial, list(map(_map_tokens_to_ids, source))))
+#         model_inputs["labels"] = list(map(_pad_sequence_partial, list(map(_map_labels_to_ids, target))))
 
-        model_inputs["word_ids"] = torch.tensor([i for i in model_inputs["word_ids"]], dtype=torch.long, device=self.device)
-        model_inputs["labels"] = torch.tensor([i for i in model_inputs["labels"]], dtype=torch.long, device=self.device)
-        model_inputs["mask"] = model_inputs["labels"].ne(0).int()
-        return model_inputs
+#         model_inputs["word_ids"] = torch.tensor([i for i in model_inputs["word_ids"]], dtype=torch.long, device=self.device)
+#         model_inputs["labels"] = torch.tensor([i for i in model_inputs["labels"]], dtype=torch.long, device=self.device)
+#         model_inputs["mask"] = model_inputs["labels"].ne(0).int()
+#         return model_inputs
 
-    def set_up_dataloader(self, data_type: data_types_="train"):
-        dataset_split = self.preprocess_data(data_type=data_type)
-        dataset_split = TensorDataset(dataset_split["word_ids"],
-                                      dataset_split["labels"],
-                                      dataset_split["mask"])
-        gc.collect()
-        return DataLoader(dataset_split,
-                          batch_size=self.batch_size,
-                          shuffle=True)
+#     def set_up_dataloader(self, data_type: data_types_="train"):
+#         dataset_split = self.preprocess_data(data_type=data_type)
+#         dataset_split = TensorDataset(dataset_split["word_ids"],
+#                                       dataset_split["labels"],
+#                                       dataset_split["mask"])
+#         gc.collect()
+#         return DataLoader(dataset_split,
+#                           batch_size=self.batch_size,
+#                           shuffle=True)
     
 # NERDataset w/ Transformers
 class NERDataset_transformers:

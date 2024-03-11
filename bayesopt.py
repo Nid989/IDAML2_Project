@@ -30,7 +30,7 @@ logger.addHandler(file_handler)
 # hyperparameter space (Λ)
 space = [Integer(150, 250, name='max_sequence_len'),
          Integer(1, 4, name='batch_size'),
-         Integer(1, 10, name='num_epochs'),
+         Integer(1, 3, name='num_epochs'),
          Real(1e-6, 1e-2, name='learning_rate', prior='log-uniform'),
          Real(1e-6, 1e-2, name='weight_decay', prior='log-uniform')]
 
@@ -86,7 +86,7 @@ def objective_function(max_sequence_len: int, batch_size: int, num_epochs: int,
 
 if __name__ == "__main__":
     logging.info("Start: scikit-optimize `Gaussian-Process` optimization procedure.")
-    res_gp = gp_minimize(objective_function, space, n_calls=2, random_state=42, callback=[DeltaXStopper(0.001)])
+    res_gp = gp_minimize(objective_function, space, n_calls=20, random_state=42, callback=[DeltaXStopper(0.001)])
     logging.info("End: scikit-optimize `Gaussian-Process` optimization procedure.")
 
     best_hyperparams = res_gp.x
