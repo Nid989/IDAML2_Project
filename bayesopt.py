@@ -28,9 +28,9 @@ file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(mes
 logger.addHandler(file_handler)
 
 # hyperparameter space (Λ)
-space = [Integer(150, 250, name='max_sequence_len'),
-         Integer(1, 4, name='batch_size'),
-         Integer(1, 3, name='num_epochs'),
+space = [Integer(150, 350, name='max_sequence_len'),
+         Integer(1, 16, name='batch_size'),
+         Integer(1, 10, name='num_epochs'),
          Real(1e-6, 1e-2, name='learning_rate', prior='log-uniform'),
          Real(1e-6, 1e-2, name='weight_decay', prior='log-uniform')]
 

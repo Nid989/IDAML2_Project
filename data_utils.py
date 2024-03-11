@@ -146,11 +146,8 @@ class NERDataset_transformers:
         else:
             self.use_crf = False
 
-    def preprocess_data(self, data_type: data_types_="train", exp_run: bool=True):
+    def preprocess_data(self, data_type: data_types_="train"):
         dataset_split = getattr(self.dataset, f"{data_type}_data")
-
-        if exp_run:
-            dataset_split = dataset_split[:10]
 
         source = [s for s in dataset_split["tokens"].values.tolist()]
         model_inputs = self.tokenizer(source,
@@ -214,8 +211,8 @@ class NERDataset_transformers:
         return model_inputs
 
     # NOTE: remove arg `exp_run` once finalized with everything!
-    def set_up_dataloader(self, data_type: data_types_="train", batch_size: int=2, exp_run: bool=True):
-        dataset_split = self.preprocess_data(data_type=data_type, exp_run=exp_run)
+    def set_up_dataloader(self, data_type: data_types_="train", batch_size: int=2):
+        dataset_split = self.preprocess_data(data_type=data_type)
         dataset_split = TensorDataset(dataset_split["input_ids"],
                                       dataset_split["attention_mask"],
                                       dataset_split["labels"],
