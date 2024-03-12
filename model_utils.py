@@ -250,7 +250,6 @@ class Trainer:
         output_dir = config_data["PATH_TO_MODEL_OUTPUT_DIR"] + f"{config_data["MODEL_NAME"]}_{config_data["VERSION"]}_" + datetime.now().strftime("%Y%m%d%H%M%S")
 
         os.makedirs(output_dir, exist_ok=True)
-        print(f"Saving model checkpoint to {output_dir}")
         if not isinstance(self.model, PreTrainedModel):
             if isinstance(unwrap_model(self.model), PreTrainedModel):
                 if state_dict is None:
