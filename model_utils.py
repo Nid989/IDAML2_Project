@@ -45,7 +45,7 @@ def get_scores(p, ner_labels_list, full_rep: bool=False, use_crf: bool=False):
             "accuracy": results["overall_accuracy"],
         }
         
-class Trainer:
+class Transformer_Trainer:
     def __init__(self,
                  model: XLMRobertaForTokenClassification,
                  dataset: NERDataset_transformers,

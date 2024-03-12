@@ -17,7 +17,7 @@ from data_utils import NERDataset_transformers
 from helpers import config_data
 from helpers import save_skopt_results
 from models.modeling_xlm_roberta import XLMRobertaForTokenClassification
-from model_utils import Trainer
+from model_utils import Transformer_Trainer
 
 # Set up logging to file and console
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -57,7 +57,7 @@ def objective_function(max_sequence_len: int, batch_size: int, num_epochs: int,
     logging.info("Model initialized successfully.")
 
     logging.info("Training...")
-    trainer = Trainer(model=model,
+    trainer = Transformer_Trainer(model=model,
                       dataset=ner_dataset,
                       batch_size=batch_size,
                       num_epochs=num_epochs,

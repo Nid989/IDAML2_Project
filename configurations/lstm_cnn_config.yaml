@@ -1,9 +1,20 @@
-
+BATCH_SIZE: 2
+NUM_EPOCHS: 5
+MAX_SEQUENCE_LEN: 150
+LEARNING_RATE: 0.001
+WEIGHT_DECAY: 0.0001
+EARLY_STOPPING_THRESHOLD: 5
 
 DATASET_NAME: "MultiCoNER2"
 # `BC5CDR` or `MultiCoNER2`
+
+FEATURE_EXTRACTOR: "lstm"
+# `lstm` or `cnn`
 
 USE_GLOVE: True # `True` or `False`
 
 RMV_STOPWORDS: False # `True` or `False`
 LEMMATIZE: False # `True` or `False`
+
+DROPOUT: 0.2 
+HIDDEN_DIM: 150 # hidden dimension for LSTM OR CNN network

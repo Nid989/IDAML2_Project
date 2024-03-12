@@ -6,7 +6,7 @@ from transformers import AutoTokenizer
 from data_utils import NERDataset_transformers
 from models.modeling_xlm_roberta import XLMRobertaForTokenClassification, XLMRobertaCRFForTokenClassification
 from helpers import general_config_data, transformers_config_data, print_model_details
-from model_utils import Trainer
+from model_utils import Transformer_Trainer
 
 # Set up logging to file and console
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -56,7 +56,7 @@ if __name__ == "__main__":
             raise ValueError("Invalid MODEL_IMPLEMENTATION value. Please check the transformers_config.yaml file.")
 
         logger.info("Training...")
-        trainer = Trainer(model=model,
+        trainer = Transformer_Trainer(model=model,
                           dataset=ner_dataset,
                           use_crf=ner_dataset.use_crf)
         logger.info("Trainer initialized")
@@ -69,7 +69,5 @@ if __name__ == "__main__":
         logging.info("Measured `f1` score: {}, `accuracy` score: {}".format(results["f1"], results["accuracy"]))
         logging.info("Evaluation completed.")
 
-    elif modeling_type == "lstm":
-        pass
-    elif modeling_type == "cnn":
+    elif modeling_type == "lstm_cnn":
         pass
