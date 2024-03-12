@@ -247,7 +247,7 @@ class Trainer:
     
     def _save(self, state_dict=None):
         
-        output_dir = config_data["PATH_TO_MODEL_OUTPUT_DIR"] + f"{config_data["MODEL_NAME"]}_{config_data["VERSION"]}_" + datetime.now().strftime("%Y%m%d%H%M%S")
+        output_dir = os.path.join(config_data["PATH_TO_MODEL_OUTPUT_DIR"], "{}_{}_{}".format(config_data["MODEL_NAME"], config_data["VERSION"], datetime.now().strftime("%Y%m%d%H%M%S")))
 
         os.makedirs(output_dir, exist_ok=True)
         if not isinstance(self.model, PreTrainedModel):
@@ -262,8 +262,8 @@ class Trainer:
                 torch.save(state_dict, os.path.join(output_dir, "WEIGHTS_NAME"))
         else:
             self.model.save_pretrained(output_dir, state_dict=state_dict)
-        if self.tokenizer is not None:
-            self.tokenizer.save_pretrained(output_dir)
+        if self.dataset.tokenizer is not None:
+            self.dataset.tokenizer.save_pretrained(output_dir)
 
     def save_model(self, state_dict=None):
         self._save(state_dict=state_dict)

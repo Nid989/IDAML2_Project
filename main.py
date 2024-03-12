@@ -63,6 +63,12 @@ if __name__ == "__main__":
         trainer.train(use_patience=False)
         logger.info("Training completed")
 
+        logging.info("Evaluation...")
+        results = trainer.get_valid_scores(dataloader=trainer.valid_dataloader,
+                                           desc="Empirical Risk Calculation on Validation Data")
+        logging.info("Measured `f1` score: {}, `accuracy` score: {}".format(results["f1"], results["accuracy"]))
+        logging.info("Evaluation completed.")
+
     elif modeling_type == "lstm":
         pass
     elif modeling_type == "cnn":

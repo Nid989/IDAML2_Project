@@ -1,0 +1,9 @@
+
+
+DATASET_NAME: "MultiCoNER2"
+# `BC5CDR` or `MultiCoNER2`
+
+USE_GLOVE: True # `True` or `False`
+
+RMV_STOPWORDS: False # `True` or `False`
+LEMMATIZE: False # `True` or `False`

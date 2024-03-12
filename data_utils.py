@@ -5,7 +5,7 @@ from typing import List, Literal, Dict
 
 import torch
 import spacy
-from torchtext.vocab import vocab, build_vocab_from_iterator
+from torchtext.vocab import vocab, GLoVe, build_vocab_from_iterator
 from torch.utils.data import DataLoader, TensorDataset
 from transformers import (
     AutoTokenizer

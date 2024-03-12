@@ -1,9 +1,9 @@
-# derived using `bayes-optimization` (w/ n_calls=3)
+# derived using `bayes-optimization` (w/ n_calls=10)
 BATCH_SIZE: 2
 NUM_EPOCHS: 5
-MAX_SEQUENCE_LEN: 190
-LEARNING_RATE: 8.532678095658718e-06 
-WEIGHT_DECAY: 2.3036990230378637e-06
+MAX_SEQUENCE_LEN: 150
+LEARNING_RATE: 1.0e-5
+WEIGHT_DECAY: 1.0e-6
 EARLY_STOPPING_THRESHOLD: 5
 
 DATASET_NAME: "MultiCoNER2"
@@ -12,7 +12,7 @@ DATASET_NAME: "MultiCoNER2"
 MODEL_CHECKPOINT: "xlm-roberta-base"
 MODEL_NAME: "xlm-roberta-base"
 
-MODEL_IMPLEMENTATION: "tokenclassification"
+MODEL_IMPLEMENTATION: "tokenclassification w/ LC-CRF"
 # `tokenclassification` or `tokenclassification w/ LC-CRF" or `ensemble tokenclassification w/ and w/o LC-CRF`
     
 VERSION: "v1"
