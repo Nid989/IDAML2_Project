@@ -2,3 +2,6 @@
 /__pycache__
 /models/__pycache__
 /scripts
+/model_checkpoints
+/logfile_bayesopt.log
+/optimization_results.pkl

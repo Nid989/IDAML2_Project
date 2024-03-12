@@ -1,5 +1,7 @@
+import os
 import gc
 import pandas as pd
+from datetime import datetime
 from tqdm.auto import tqdm
 
 import torch
@@ -7,16 +9,21 @@ import torch.nn.functional as F
 from torch.optim import AdamW
 import torch.utils.checkpoint
 from evaluate import load
+from transformers.modeling_utils import PreTrainedModel, unwrap_model
 
 from models.modeling_xlm_roberta import XLMRobertaForTokenClassification
 from data_utils import NERDataset_transformers
-from helpers import config_data
+from helpers import transformers_config_data as config_data
 
 seqeval = load("seqeval")
 
-def get_scores(p, ner_labels_list, full_rep: bool=False):
+def get_scores(p, ner_labels_list, full_rep: bool=False, use_crf: bool=False):
     predictions, labels = p
-    ignore_idx_list = [-100]
+
+    if use_crf:
+        ignore_idx_list = [0, 2, 1] # <s>, </s>, <pad>
+    else:
+        ignore_idx_list = [-100]
 
     true_predictions = [
         [ner_labels_list[p] for (p, l) in zip(prediction, label) if l not in ignore_idx_list]
@@ -37,14 +44,16 @@ def get_scores(p, ner_labels_list, full_rep: bool=False):
             "f1": results["overall_f1"],
             "accuracy": results["overall_accuracy"],
         }
-    
+        
 class Trainer:
     def __init__(self,
                  model: XLMRobertaForTokenClassification,
                  dataset: NERDataset_transformers,
+                 use_crf: bool=False,
                  **hparam_kwargs):
         self.model = model
         self.dataset = dataset
+        self.use_crf = use_crf
         self.batch_size = int(hparam_kwargs["batch_size"]) if "batch_size" in hparam_kwargs else int(config_data["BATCH_SIZE"])
         self.num_epochs = int(hparam_kwargs["num_epochs"]) if "num_epochs" in hparam_kwargs else int(config_data["NUM_EPOCHS"])
         self.learning_rate = float(hparam_kwargs["learning_rate"]) if "learning_rate" in hparam_kwargs else float(config_data["LEARNING_RATE"])
@@ -54,8 +63,8 @@ class Trainer:
                                lr=self.learning_rate,
                                weight_decay=self.weight_decay)
 
-        self.train_dataloader = dataset.set_up_dataloader("train")
-        self.valid_dataloader= dataset.set_up_dataloader("valid")
+        self.train_dataloader = dataset.set_up_dataloader("train", batch_size=self.batch_size)
+        self.valid_dataloader= dataset.set_up_dataloader("valid", batch_size=self.batch_size)
 
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
@@ -98,6 +107,8 @@ class Trainer:
             gc.collect()
             torch.cuda.empty_cache()
 
+        self.save_model()
+
     def train_epoch(self):
         self.model.train()
         epoch_train_loss = 0.0
@@ -106,9 +117,16 @@ class Trainer:
             batch = tuple(t.to(self.device) for t in batch)
             input_ids, attention_mask, labels, mask = batch
             self.optimizer.zero_grad()
-            outputs = self.model(input_ids=input_ids,
-                                attention_mask=attention_mask,
-                                labels=labels)
+            if self.use_crf:
+                outputs = self.model(input_ids=input_ids,
+                                    attention_mask=attention_mask,
+                                    labels=labels,
+                                    mask=mask,
+                                    reduction='mean')
+            else:
+                outputs = self.model(input_ids=input_ids,
+                                    attention_mask=attention_mask,
+                                    labels=labels)
             loss = outputs.loss
             epoch_train_loss += loss.item()
 
@@ -137,9 +155,16 @@ class Trainer:
             for step, batch in enumerate(pbar):
                 batch = tuple(t.to(self.device) for t in batch)
                 input_ids, attention_mask, labels, mask = batch
-                outputs = self.model(input_ids=input_ids,
-                                     attention_mask=attention_mask,
-                                     labels=labels)
+                if self.use_crf:
+                    outputs = self.model(input_ids=input_ids,
+                                        attention_mask=attention_mask,
+                                        labels=labels,
+                                        mask=mask,
+                                        reduction="mean")
+                else:
+                    outputs = self.model(input_ids=input_ids,
+                                        attention_mask=attention_mask,
+                                        labels=labels)
                 loss = outputs.loss
                 epoch_val_loss += loss.item()
 
@@ -166,14 +191,23 @@ class Trainer:
             for step, batch in enumerate(pbar):
                 batch = (t.to(self.device) for t in batch)
                 input_ids, attention_mask, labels, mask = batch
-                outputs = self.model(input_ids=input_ids,
-                                    attention_mask=attention_mask,
-                                    **gen_kwargs)
-                probabilities = F.softmax(outputs.logits, dim=-1)
-                predictions = probabilities.argmax(dim=-1).cpu().tolist()
+                if self.use_crf:
+                    outputs = self.model(input_ids=input_ids,
+                                        attention_mask=attention_mask,
+                                        **gen_kwargs)
+                    predictions = outputs.predictions
 
-                out_predictions.extend(predictions)
-                gold.extend(labels.cpu().tolist())
+                    out_predictions.extend(predictions.cpu().tolist())
+                    gold.extend(labels.cpu().tolist())
+                else:
+                    outputs = self.model(input_ids=input_ids,
+                                        attention_mask=attention_mask,
+                                        **gen_kwargs)
+                    probabilities = F.softmax(outputs.logits, dim=-1)
+                    predictions = probabilities.argmax(dim=-1).cpu().tolist()
+
+                    out_predictions.extend(predictions)
+                    gold.extend(labels.cpu().tolist())
 
         del batch
         del input_ids
@@ -197,7 +231,8 @@ class Trainer:
                                             desc=desc,
                                             **gen_kwargs)
         result = get_scores(p=(predictions, gold),
-                            ner_labels_list=self.dataset.dataset.labels)
+                            ner_labels_list=self.dataset.dataset.labels,
+                            use_crf=self.use_crf)
         if log_results:
             test_df = pd.DataFrame(list(zip(gold, predictions)), columns=["ground_truth", "prediction"])
             test_df.to_csv()
@@ -209,3 +244,27 @@ class Trainer:
         torch.cuda.empty_cache()
 
         return result
+    
+    def _save(self, state_dict=None):
+        
+        output_dir = config_data["PATH_TO_MODEL_OUTPUT_DIR"] + f"{config_data["MODEL_NAME"]}_{config_data["VERSION"]}_" + datetime.now().strftime("%Y%m%d%H%M%S")
+
+        os.makedirs(output_dir, exist_ok=True)
+        print(f"Saving model checkpoint to {output_dir}")
+        if not isinstance(self.model, PreTrainedModel):
+            if isinstance(unwrap_model(self.model), PreTrainedModel):
+                if state_dict is None:
+                    state_dict = self.model.state_dict()
+                unwrap_model(self.model).save_pretrained(output_dir, state_dict=state_dict)
+            else:
+                print("Trainer.model is not a `PreTrainedModel`, only saving its state dict.")
+                if state_dict is None:
+                    state_dict = self.model.state_dict()
+                torch.save(state_dict, os.path.join(output_dir, "WEIGHTS_NAME"))
+        else:
+            self.model.save_pretrained(output_dir, state_dict=state_dict)
+        if self.tokenizer is not None:
+            self.tokenizer.save_pretrained(output_dir)
+
+    def save_model(self, state_dict=None):
+        self._save(state_dict=state_dict)

@@ -28,9 +28,9 @@ file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(mes
 logger.addHandler(file_handler)
 
 # hyperparameter space (Λ)
-space = [Integer(150, 350, name='max_sequence_len'),
+space = [Integer(150, 250, name='max_sequence_len'),
          Integer(1, 16, name='batch_size'),
-         Integer(1, 10, name='num_epochs'),
+         Integer(1, 5, name='num_epochs'),
          Real(1e-6, 1e-2, name='learning_rate', prior='log-uniform'),
          Real(1e-6, 1e-2, name='weight_decay', prior='log-uniform')]
 
@@ -69,6 +69,7 @@ def objective_function(max_sequence_len: int, batch_size: int, num_epochs: int,
     logging.info("Evaluation...")
     results = trainer.get_valid_scores(dataloader=trainer.valid_dataloader,
                                        desc="Empirical Risk Calculation on Validation Data")
+    logging.info("Measured `f1` score: {}".format(results["f1"]))
     logging.info("Evaluation completed.")
 
     del tokenizer
@@ -86,7 +87,7 @@ def objective_function(max_sequence_len: int, batch_size: int, num_epochs: int,
 
 if __name__ == "__main__":
     logging.info("Start: scikit-optimize `Gaussian-Process` optimization procedure.")
-    res_gp = gp_minimize(objective_function, space, n_calls=20, random_state=42, callback=[DeltaXStopper(0.001)])
+    res_gp = gp_minimize(objective_function, space, n_calls=10, random_state=42, callback=[DeltaXStopper(0.001)])
     logging.info("End: scikit-optimize `Gaussian-Process` optimization procedure.")
 
     best_hyperparams = res_gp.x

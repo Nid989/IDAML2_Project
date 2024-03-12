@@ -2,6 +2,7 @@ import os
 import pickle
 import yaml
 import pandas as pd
+
 from skopt import dump, load
 
 def check_and_create_directory(path_to_folder):
@@ -27,7 +28,8 @@ def load_from_yaml(file_path):
         data = yaml.safe_load(file)
     return data
 
-config_data = load_from_yaml("./config.yaml")
+general_config_data = load_from_yaml("./configurations/config.yaml")
+transformers_config_data = load_from_yaml("./configurations/transformers_config.yaml")
 
 def save_skopt_results(results, filename: str="optimization_results.pkl", **kwargs):
     if "logging" in kwargs:
@@ -57,3 +59,10 @@ def save_results(path_to_file: str, results: dict):
     results_df.set_index("CLASS", inplace=True)
     results_df.to_csv(path_to_file)
     print(f"File saved at location: {path_to_file}")
+
+def print_model_details(model):
+    pytorch_total_params = sum(p.numel() for p in model.parameters())
+    print(f"Total number of parameters: {pytorch_total_params}")
+    pytorch_total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"Total number of trainable parameters: {pytorch_total_trainable_params}")
+
