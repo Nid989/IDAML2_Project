@@ -1,4 +1,4 @@
-MODELING_TYPE: "transformers"
+MODELING_TYPE: "lstm_cnn"
 # `transformers` or `lstm_cnn`
     
 PATH_TO_DATA_DIRECTORY: "./data/"

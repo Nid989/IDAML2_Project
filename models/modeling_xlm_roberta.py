@@ -19,7 +19,7 @@ class TokenCRFClassifierOutput(TokenClassifierOutput):
     hidden_states: Optional[Tuple[torch.FloatTensor]] = None
     attentions: Optional[Tuple[torch.FloatTensor]] = None
 
-class XLMRobertaCRForTokenClassification(XLMRobertaPreTrainedModel):
+class XLMRobertaCRFForTokenClassification(XLMRobertaPreTrainedModel):
     _keys_to_ignore_on_load_unexpected = [r"Pooler"]
     _keys_to_ignore_on_load_missing = [r"position_ids"]
 

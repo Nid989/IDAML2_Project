@@ -74,7 +74,8 @@ if __name__ == "__main__":
         feature_extractor = lstm_cnn_config_data["FEATURE_EXTRACTOR"]
         logger.info(f"Feature extractor utilized: {feature_extractor}")
 
-        ner_dataset = NERDataset_LSTM_CNN(config=lstm_cnn_config_data)
+        ner_dataset = NERDataset_LSTM_CNN(config=lstm_cnn_config_data,
+                                          glove_dim=lstm_cnn_config_data["INPUT_DIM"])
         ner_dataset.on_setup()
         logger.info("NER Dataset created")
 
@@ -82,6 +83,9 @@ if __name__ == "__main__":
 
         logger.info("Using TokenClassification model")
         model = LSTMCNNForTokenClassification(config=lstm_cnn_model_config)
+        model.to(device)
+        print_model_details(model)
+        print(model)
 
         logger.info("Training...")
         trainer = LSTM_CNN_Trainer(model=model,

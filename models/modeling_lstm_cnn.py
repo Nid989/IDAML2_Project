@@ -65,7 +65,7 @@ class LSTMCNNForTokenClassification(nn.Module):
                  vocab_size: Optional[int]=None,
                  input_dim: Optional[int]=None,
                  hidden_dim: Optional[int]=None,
-                 n_layers: Optional[int]=1,
+                 n_layers: Optional[int]=None,
                  dropout: Optional[float]=None,
                  pretrained_embeds: Optional[np.array]=None, **kwargs):
         super(LSTMCNNForTokenClassification, self).__init__()
@@ -77,7 +77,8 @@ class LSTMCNNForTokenClassification(nn.Module):
         self.vocab_size = config["vocab_size"] if not vocab_size else vocab_size
         self.input_dim = config["input_dim"] if not input_dim else input_dim
         self.hidden_dim = config["hidden_dim"] if not hidden_dim else hidden_dim
-        self.dropout = nn.Dropout(config["dropout"]) if not dropout else nn.Dropout(dropout)
+        dropout = config["dropout"] if not dropout else dropout
+        self.dropout = nn.Dropout(dropout)
 
         if self.hidden_dim == None:
             raise ValueError("Required to mention the `hidden_dim` parameter OR `HIDDEN_DIM` config-value")
@@ -93,7 +94,7 @@ class LSTMCNNForTokenClassification(nn.Module):
 
         self.feature_extractor = feature_extractor
         if self.feature_extractor == "lstm":
-            self.n_layers = n_layers
+            self.n_layers = config["n_layers"] if not n_layers else n_layers 
             self.lstm = nn.LSTM(self.input_dim, self.hidden_dim, self.n_layers, batch_first=True, bidirectional=True, dropout=dropout)
         elif self.feature_extractor == "cnn":
             self.word2cnn = nn.Linear(self.input_dim, self.hidden_dim*2)

@@ -82,8 +82,6 @@ class NERDataset_LSTM_CNN:
 
         dataset_split = getattr(self.dataset, f"{data_type}_data")
 
-        dataset_split = dataset_split[:10]
-
         if self.rmv_stopwords:
             dataset_split["tokens"] = dataset_split.apply(
                 lambda row: [token.text for token in nlp(" ".join(row["tokens"])) if not token.is_stop],

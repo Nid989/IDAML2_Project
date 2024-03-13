@@ -19,5 +19,5 @@ LEMMATIZE: False # `True` or `False`
 DROPOUT: 0.2 
 INPUT_DIM: 100 
 # `50`, `100`, `150` or `300`
-N_LAYERS: 2 # number of layers for LSTM OR CNN network
+N_LAYERS: 4 # number of layers for LSTM OR CNN network
 HIDDEN_DIM: 150 # hidden dimension for LSTM OR CNN network
