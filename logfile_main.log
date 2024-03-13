@@ -1,6 +1,0 @@
-2024-03-12 13:42:31,792 - INFO - Using device: cpu
-2024-03-12 13:42:31,792 - INFO - Modeling type: transformers
-2024-03-12 13:42:31,793 - INFO - Model checkpoint: xlm-roberta-base
-2024-03-12 13:42:33,886 - INFO - Tokenizer loaded
-2024-03-12 13:42:33,887 - INFO - NER Dataset created
-2024-03-12 13:42:38,905 - INFO - Using TokenClassification model
