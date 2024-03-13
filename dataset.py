@@ -5,7 +5,7 @@ import typing
 from collections import defaultdict
 from typing import Dict, List, Literal, Optional
 
-# BC5CDR dataset 
+# ---------------------- # BC5CDR dataset # ---------------------- # 
 class BC5CDR:
     def __init__(self, path_to_data_dir: str, remove_IOB: bool=False):
         super().__init__()
@@ -75,7 +75,7 @@ Test data: $TEST_DATA_SIZE$"""
         types = ['Disease', 'Chemical']
         return types
         
-# MultiCoNER2 dataset
+# ---------------------- # MultiCoNER2 dataset # ---------------------- #
 class MultiCoNER2:
     def __init__(self, path_to_data_dir: str, lang: Optional[str]=None, remove_IOB: bool=False):
         super().__init__()

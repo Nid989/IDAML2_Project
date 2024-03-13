@@ -3,10 +3,11 @@ import logging
 import torch
 from transformers import AutoTokenizer
 
-from data_utils import NERDataset_transformers
+from data_utils import NERDataset_LSTM_CNN, NERDataset_transformers
 from models.modeling_xlm_roberta import XLMRobertaForTokenClassification, XLMRobertaCRFForTokenClassification
-from helpers import general_config_data, transformers_config_data, print_model_details
-from model_utils import Transformer_Trainer
+from models.modeling_lstm_cnn import LSTMCNNForTokenClassification, prepare_model_config
+from helpers import general_config_data, lstm_cnn_config_data, transformers_config_data, print_model_details
+from model_utils import Transformer_Trainer, LSTM_CNN_Trainer
 
 # Set up logging to file and console
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -57,8 +58,8 @@ if __name__ == "__main__":
 
         logger.info("Training...")
         trainer = Transformer_Trainer(model=model,
-                          dataset=ner_dataset,
-                          use_crf=ner_dataset.use_crf)
+                                      dataset=ner_dataset,
+                                      use_crf=ner_dataset.use_crf)
         logger.info("Trainer initialized")
         trainer.train(use_patience=False)
         logger.info("Training completed")
@@ -70,4 +71,28 @@ if __name__ == "__main__":
         logging.info("Evaluation completed.")
 
     elif modeling_type == "lstm_cnn":
-        pass
+        feature_extractor = lstm_cnn_config_data["FEATURE_EXTRACTOR"]
+        logger.info(f"Feature extractor utilized: {feature_extractor}")
+
+        ner_dataset = NERDataset_LSTM_CNN(config=lstm_cnn_config_data)
+        ner_dataset.on_setup()
+        logger.info("NER Dataset created")
+
+        lstm_cnn_model_config = prepare_model_config(ner_dataset=ner_dataset)
+
+        logger.info("Using TokenClassification model")
+        model = LSTMCNNForTokenClassification(config=lstm_cnn_model_config)
+
+        logger.info("Training...")
+        trainer = LSTM_CNN_Trainer(model=model,
+                                   dataset=ner_dataset)
+        
+        logger.info("Trainer initialized")
+        trainer.train(use_patience=False)
+        logger.info("Training completed")
+
+        logging.info("Evaluation...")
+        results = trainer.get_valid_scores(dataloader=trainer.valid_dataloader,
+                                           desc="Empirical Risk Calculation on Validation Data")
+        logging.info("Measured `f1` score: {}, `accuracy` score: {}".format(results["f1"], results["accuracy"]))
+        logging.info("Evaluation completed.")

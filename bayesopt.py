@@ -58,12 +58,12 @@ def objective_function(max_sequence_len: int, batch_size: int, num_epochs: int,
 
     logging.info("Training...")
     trainer = Transformer_Trainer(model=model,
-                      dataset=ner_dataset,
-                      batch_size=batch_size,
-                      num_epochs=num_epochs,
-                      learning_rate=learning_rate,
-                      weight_decay=weight_decay)
-    trainer.train()
+                                  dataset=ner_dataset,
+                                  batch_size=batch_size,
+                                  num_epochs=num_epochs,
+                                  learning_rate=learning_rate,
+                                  weight_decay=weight_decay)
+    trainer.train(save=False)
     logging.info("Training completed.")
 
     logging.info("Evaluation...")

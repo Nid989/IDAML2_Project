@@ -5,3 +5,4 @@
 /model_checkpoints
 /logfile_bayesopt.log
 /optimization_results.pkl
+/embeddings/
