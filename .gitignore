@@ -3,7 +3,5 @@
 /models/__pycache__
 /scripts
 /model_checkpoints
-/logfile_bayesopt.log
-/logfile_main.log
 /optimization_results.pkl
 /embeddings/

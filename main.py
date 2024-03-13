@@ -85,7 +85,6 @@ if __name__ == "__main__":
         model = LSTMCNNForTokenClassification(config=lstm_cnn_model_config)
         model.to(device)
         print_model_details(model)
-        print(model)
 
         logger.info("Training...")
         trainer = LSTM_CNN_Trainer(model=model,

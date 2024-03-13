@@ -1,0 +1,209 @@
+2024-03-11 19:36:58,358 - INFO - Start: scikit-optimize `Gaussian-Process` optimization procedure.
+2024-03-11 19:38:02,785 - INFO - Start: scikit-optimize `Gaussian-Process` optimization procedure.
+2024-03-11 19:38:02,804 - INFO - Starting objective function execution.
+2024-03-11 19:38:02,806 - INFO - Received attributes: learning_rate=0.00024400607090817544, weight_decay=6.071989493441303e-05, batch_size=2, num_epochs=3, max_sequence_len=230
+2024-03-11 19:38:02,806 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-11 19:38:07,328 - INFO - Tokenizer initialized successfully.
+2024-03-11 19:38:07,329 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-11 19:38:12,870 - INFO - NER Dataset prepared successfully.
+2024-03-11 19:38:12,870 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-11 19:38:28,166 - INFO - Model initialized successfully.
+2024-03-11 19:38:28,168 - INFO - Training...
+2024-03-11 19:38:39,750 - INFO - Training completed.
+2024-03-11 19:38:39,750 - INFO - Evaluation...
+2024-03-11 19:38:40,808 - INFO - Evaluation completed.
+2024-03-11 19:38:41,522 - INFO - Objective function execution completed in 38.72 seconds.
+2024-03-11 19:38:41,524 - INFO - Starting objective function execution.
+2024-03-11 19:38:41,526 - INFO - Received attributes: learning_rate=3.727925903376984e-06, weight_decay=0.00040137830238462545, batch_size=2, num_epochs=2, max_sequence_len=160
+2024-03-11 19:38:41,526 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-11 19:38:42,871 - INFO - Tokenizer initialized successfully.
+2024-03-11 19:38:42,872 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-11 19:38:48,459 - INFO - NER Dataset prepared successfully.
+2024-03-11 19:38:48,460 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-11 19:38:50,151 - INFO - Model initialized successfully.
+2024-03-11 19:38:50,151 - INFO - Training...
+2024-03-11 19:38:58,228 - INFO - Training completed.
+2024-03-11 19:38:58,229 - INFO - Evaluation...
+2024-03-11 19:38:59,349 - INFO - Evaluation completed.
+2024-03-11 19:39:00,155 - INFO - Objective function execution completed in 18.63 seconds.
+2024-03-11 19:39:00,158 - INFO - Starting objective function execution.
+2024-03-11 19:39:00,159 - INFO - Received attributes: learning_rate=1.0071984838809193e-06, weight_decay=0.009307782732027245, batch_size=3, num_epochs=3, max_sequence_len=156
+2024-03-11 19:39:00,159 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-11 19:39:01,870 - INFO - Tokenizer initialized successfully.
+2024-03-11 19:39:01,871 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-11 19:39:08,529 - INFO - NER Dataset prepared successfully.
+2024-03-11 19:39:08,530 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-11 19:39:10,395 - INFO - Model initialized successfully.
+2024-03-11 19:39:10,395 - INFO - Training...
+2024-03-11 19:39:23,717 - INFO - Training completed.
+2024-03-11 19:39:23,718 - INFO - Evaluation...
+2024-03-11 19:39:24,788 - INFO - Evaluation completed.
+2024-03-11 19:39:25,531 - INFO - Objective function execution completed in 25.37 seconds.
+2024-03-11 19:39:25,533 - INFO - Starting objective function execution.
+2024-03-11 19:39:25,534 - INFO - Received attributes: learning_rate=1.2366582530130827e-06, weight_decay=0.00012563152773938674, batch_size=3, num_epochs=1, max_sequence_len=212
+2024-03-11 19:39:25,534 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-11 19:39:26,881 - INFO - Tokenizer initialized successfully.
+2024-03-11 19:39:26,882 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 00:05:57,206 - INFO - Start: scikit-optimize `Gaussian-Process` optimization procedure.
+2024-03-12 00:05:57,221 - INFO - Starting objective function execution.
+2024-03-12 00:05:57,223 - INFO - Received attributes: learning_rate=0.00024400607090817544, weight_decay=6.071989493441303e-05, batch_size=4, num_epochs=8, max_sequence_len=309
+2024-03-12 00:05:57,224 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 00:05:58,444 - INFO - Tokenizer initialized successfully.
+2024-03-12 00:05:58,445 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 00:06:02,887 - INFO - NER Dataset prepared successfully.
+2024-03-12 00:06:02,888 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 00:06:06,686 - INFO - Model initialized successfully.
+2024-03-12 00:06:06,687 - INFO - Training...
+2024-03-12 00:19:42,255 - INFO - Start: scikit-optimize `Gaussian-Process` optimization procedure.
+2024-03-12 00:19:42,284 - INFO - Starting objective function execution.
+2024-03-12 00:19:42,285 - INFO - Received attributes: learning_rate=0.00024400607090817544, weight_decay=6.071989493441303e-05, batch_size=4, num_epochs=4, max_sequence_len=230
+2024-03-12 00:19:42,285 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 00:19:43,512 - INFO - Tokenizer initialized successfully.
+2024-03-12 00:19:43,513 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 00:19:47,621 - INFO - NER Dataset prepared successfully.
+2024-03-12 00:19:47,622 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 00:19:51,309 - INFO - Model initialized successfully.
+2024-03-12 00:19:51,310 - INFO - Training...
+2024-03-12 00:32:05,834 - INFO - Start: scikit-optimize `Gaussian-Process` optimization procedure.
+2024-03-12 00:32:05,854 - INFO - Starting objective function execution.
+2024-03-12 00:32:05,855 - INFO - Received attributes: learning_rate=0.00024400607090817544, weight_decay=6.071989493441303e-05, batch_size=4, num_epochs=4, max_sequence_len=230
+2024-03-12 00:32:05,856 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 00:32:07,053 - INFO - Tokenizer initialized successfully.
+2024-03-12 00:32:07,054 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 00:32:11,145 - INFO - NER Dataset prepared successfully.
+2024-03-12 00:32:11,147 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 00:32:14,949 - INFO - Model initialized successfully.
+2024-03-12 00:32:14,950 - INFO - Training...
+2024-03-12 00:48:53,946 - INFO - Start: scikit-optimize `Gaussian-Process` optimization procedure.
+2024-03-12 00:48:53,971 - INFO - Starting objective function execution.
+2024-03-12 00:48:53,973 - INFO - Received attributes: learning_rate=0.00024400607090817544, weight_decay=6.071989493441303e-05, batch_size=4, num_epochs=4, max_sequence_len=230
+2024-03-12 00:48:53,974 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 00:48:55,194 - INFO - Tokenizer initialized successfully.
+2024-03-12 00:48:55,195 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 00:48:59,343 - INFO - NER Dataset prepared successfully.
+2024-03-12 00:48:59,344 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 00:49:03,116 - INFO - Model initialized successfully.
+2024-03-12 00:49:03,117 - INFO - Training...
+2024-03-12 01:17:06,029 - INFO - Training completed.
+2024-03-12 01:17:06,030 - INFO - Evaluation...
+2024-03-12 01:17:11,563 - INFO - Evaluation completed.
+2024-03-12 01:17:12,115 - INFO - Objective function execution completed in 1698.14 seconds.
+2024-03-12 01:17:12,118 - INFO - Starting objective function execution.
+2024-03-12 01:17:12,119 - INFO - Received attributes: learning_rate=3.727925903376984e-06, weight_decay=0.00040137830238462545, batch_size=8, num_epochs=2, max_sequence_len=160
+2024-03-12 01:17:12,120 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 01:17:13,334 - INFO - Tokenizer initialized successfully.
+2024-03-12 01:17:13,335 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 01:17:17,727 - INFO - NER Dataset prepared successfully.
+2024-03-12 01:17:17,729 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 01:17:19,257 - INFO - Model initialized successfully.
+2024-03-12 01:17:19,259 - INFO - Training...
+2024-03-12 01:25:07,649 - INFO - Training completed.
+2024-03-12 01:25:07,658 - INFO - Evaluation...
+2024-03-12 01:25:11,241 - INFO - Evaluation completed.
+2024-03-12 01:25:11,751 - INFO - Objective function execution completed in 479.63 seconds.
+2024-03-12 01:25:11,753 - INFO - Starting objective function execution.
+2024-03-12 01:25:11,754 - INFO - Received attributes: learning_rate=1.0071984838809193e-06, weight_decay=0.009307782732027245, batch_size=12, num_epochs=5, max_sequence_len=156
+2024-03-12 01:25:11,756 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 01:25:12,704 - INFO - Tokenizer initialized successfully.
+2024-03-12 01:25:12,705 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 01:25:16,906 - INFO - NER Dataset prepared successfully.
+2024-03-12 01:25:16,907 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 01:25:18,703 - INFO - Model initialized successfully.
+2024-03-12 01:25:18,704 - INFO - Training...
+2024-03-12 01:42:21,995 - INFO - Training completed.
+2024-03-12 01:42:22,012 - INFO - Evaluation...
+2024-03-12 01:42:25,648 - INFO - Evaluation completed.
+2024-03-12 01:42:26,159 - INFO - Objective function execution completed in 1034.41 seconds.
+2024-03-12 01:42:26,161 - INFO - Starting objective function execution.
+2024-03-12 01:42:26,162 - INFO - Received attributes: learning_rate=1.2366582530130827e-06, weight_decay=0.00012563152773938674, batch_size=10, num_epochs=1, max_sequence_len=212
+2024-03-12 01:42:26,163 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 01:42:27,169 - INFO - Tokenizer initialized successfully.
+2024-03-12 01:42:27,170 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 01:42:31,535 - INFO - NER Dataset prepared successfully.
+2024-03-12 01:42:31,536 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 01:42:33,082 - INFO - Model initialized successfully.
+2024-03-12 01:42:33,083 - INFO - Training...
+2024-03-12 01:47:02,286 - INFO - Training completed.
+2024-03-12 01:47:02,297 - INFO - Evaluation...
+2024-03-12 01:47:06,817 - INFO - Evaluation completed.
+2024-03-12 01:47:07,370 - INFO - Objective function execution completed in 281.21 seconds.
+2024-03-12 01:47:07,372 - INFO - Starting objective function execution.
+2024-03-12 01:47:07,374 - INFO - Received attributes: learning_rate=8.532678095658718e-06, weight_decay=2.3036990230378637e-06, batch_size=2, num_epochs=5, max_sequence_len=190
+2024-03-12 01:47:07,375 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 01:47:08,362 - INFO - Tokenizer initialized successfully.
+2024-03-12 01:47:08,363 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 01:47:12,719 - INFO - NER Dataset prepared successfully.
+2024-03-12 01:47:12,722 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 01:47:14,213 - INFO - Model initialized successfully.
+2024-03-12 01:47:14,214 - INFO - Training...
+2024-03-12 02:37:08,877 - INFO - Training completed.
+2024-03-12 02:37:08,891 - INFO - Evaluation...
+2024-03-12 02:37:14,665 - INFO - Evaluation completed.
+2024-03-12 02:37:15,233 - INFO - Objective function execution completed in 3007.86 seconds.
+2024-03-12 02:37:15,235 - INFO - Starting objective function execution.
+2024-03-12 02:37:15,235 - INFO - Received attributes: learning_rate=7.362945281639229e-05, weight_decay=0.0027527173929429443, batch_size=7, num_epochs=5, max_sequence_len=212
+2024-03-12 02:37:15,236 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 02:37:16,325 - INFO - Tokenizer initialized successfully.
+2024-03-12 02:37:16,326 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 02:37:20,689 - INFO - NER Dataset prepared successfully.
+2024-03-12 02:37:20,690 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 02:37:22,243 - INFO - Model initialized successfully.
+2024-03-12 02:37:22,244 - INFO - Training...
+2024-03-12 03:02:46,502 - INFO - Training completed.
+2024-03-12 03:02:46,525 - INFO - Evaluation...
+2024-03-12 03:02:51,258 - INFO - Evaluation completed.
+2024-03-12 03:02:51,815 - INFO - Objective function execution completed in 1536.58 seconds.
+2024-03-12 03:02:51,817 - INFO - Starting objective function execution.
+2024-03-12 03:02:51,817 - INFO - Received attributes: learning_rate=0.005872283616443731, weight_decay=0.00017912362571043672, batch_size=8, num_epochs=1, max_sequence_len=218
+2024-03-12 03:02:51,818 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 03:02:52,764 - INFO - Tokenizer initialized successfully.
+2024-03-12 03:02:52,765 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 03:02:57,168 - INFO - NER Dataset prepared successfully.
+2024-03-12 03:02:57,169 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 03:02:58,658 - INFO - Model initialized successfully.
+2024-03-12 03:02:58,659 - INFO - Training...
+2024-03-12 03:07:57,434 - INFO - Training completed.
+2024-03-12 03:07:57,446 - INFO - Evaluation...
+2024-03-12 03:08:02,265 - INFO - Evaluation completed.
+2024-03-12 03:08:02,902 - INFO - Objective function execution completed in 311.09 seconds.
+2024-03-12 03:08:02,904 - INFO - Starting objective function execution.
+2024-03-12 03:08:02,905 - INFO - Received attributes: learning_rate=9.206654892274771e-06, weight_decay=0.0005408216580718496, batch_size=1, num_epochs=2, max_sequence_len=189
+2024-03-12 03:08:02,906 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 03:08:03,830 - INFO - Tokenizer initialized successfully.
+2024-03-12 03:08:03,831 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 03:08:08,066 - INFO - NER Dataset prepared successfully.
+2024-03-12 03:08:08,067 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 03:08:09,592 - INFO - Model initialized successfully.
+2024-03-12 03:08:09,593 - INFO - Training...
+2024-03-12 03:46:55,228 - INFO - Training completed.
+2024-03-12 03:46:55,242 - INFO - Evaluation...
+2024-03-12 03:47:05,326 - INFO - Evaluation completed.
+2024-03-12 03:47:05,890 - INFO - Objective function execution completed in 2342.99 seconds.
+2024-03-12 03:47:05,892 - INFO - Starting objective function execution.
+2024-03-12 03:47:05,892 - INFO - Received attributes: learning_rate=3.666421832063727e-05, weight_decay=5.3572800696018355e-06, batch_size=13, num_epochs=2, max_sequence_len=211
+2024-03-12 03:47:05,893 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 03:47:06,923 - INFO - Tokenizer initialized successfully.
+2024-03-12 03:47:06,924 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 03:47:11,310 - INFO - NER Dataset prepared successfully.
+2024-03-12 03:47:11,312 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 03:47:12,807 - INFO - Model initialized successfully.
+2024-03-12 03:47:12,808 - INFO - Training...
+2024-03-12 03:55:38,404 - INFO - Training completed.
+2024-03-12 03:55:38,423 - INFO - Evaluation...
+2024-03-12 03:55:42,921 - INFO - Evaluation completed.
+2024-03-12 03:55:43,508 - INFO - Objective function execution completed in 517.62 seconds.
+2024-03-12 03:55:43,510 - INFO - Starting objective function execution.
+2024-03-12 03:55:43,510 - INFO - Received attributes: learning_rate=0.00018655260217376844, weight_decay=1.3342990285187939e-06, batch_size=7, num_epochs=2, max_sequence_len=226
+2024-03-12 03:55:43,511 - INFO - Initializing Tokenizer: AutoTokenizer.from_pretrained('xlm-roberta-base')
+2024-03-12 03:55:44,494 - INFO - Tokenizer initialized successfully.
+2024-03-12 03:55:44,496 - INFO - Preparing NER Dataset: NERDataset_transformers(tokenizer=tokenizer, config=config_data, max_sequence_len=max_sequence_len)
+2024-03-12 03:55:48,781 - INFO - NER Dataset prepared successfully.
+2024-03-12 03:55:48,782 - INFO - Initializing Model: XLMRobertaForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=len(ner_dataset.dataset.labels))
+2024-03-12 03:55:50,408 - INFO - Model initialized successfully.
+2024-03-12 03:55:50,409 - INFO - Training...
+2024-03-12 04:06:10,477 - INFO - Training completed.
+2024-03-12 04:06:10,491 - INFO - Evaluation...
+2024-03-12 04:06:15,195 - INFO - Evaluation completed.
+2024-03-12 04:06:15,738 - INFO - Objective function execution completed in 632.23 seconds.
+2024-03-12 04:06:16,286 - INFO - End: scikit-optimize `Gaussian-Process` optimization procedure.
+2024-03-12 04:06:16,287 - INFO - Saving the scikit-optimize (bayesian optimization) results w/ filename
