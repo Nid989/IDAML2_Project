@@ -34,7 +34,7 @@ def get_scores(p, ner_labels_list, full_rep: bool=False):
     results = seqeval.compute(predictions=true_predictions, references=true_labels, zero_division=False)
 
     if full_rep:
-        return results
+        return results, (true_predictions, true_labels)
     else:
         return {
             "precision": results["overall_precision"],
@@ -42,7 +42,7 @@ def get_scores(p, ner_labels_list, full_rep: bool=False):
             "f1": results["overall_f1"],
             "accuracy": results["overall_accuracy"],
         }
-        
+            
 # ---------------------- # LSTM CNN Trainer # ---------------------- #
 class LSTM_CNN_Trainer:
     def __init__(self,
