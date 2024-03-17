@@ -13,18 +13,15 @@ from transformers.modeling_utils import PreTrainedModel, unwrap_model
 
 from models.modeling_xlm_roberta import XLMRobertaForTokenClassification
 from models.modeling_lstm_cnn import LSTMCNNForTokenClassification
-from data_utils import NERDataset_LSTM_CNN, NERDataset_transformers
+from data_utils import NERDataset_lstm_cnn, NERDataset_transformers
 from helpers import lstm_cnn_config_data, transformers_config_data
 
 seqeval = load("seqeval")
 
-def get_scores(p, ner_labels_list, full_rep: bool=False, use_crf: bool=False):
+def get_scores(p, ner_labels_list, full_rep: bool=False):
     predictions, labels = p
 
-    if use_crf:
-        ignore_idx_list = [0, 2, 1] # <s>, </s>, <pad>
-    else:
-        ignore_idx_list = [-100]
+    ignore_idx_list = [-100]
 
     true_predictions = [
         [ner_labels_list[p] for (p, l) in zip(prediction, label) if l not in ignore_idx_list]
@@ -50,7 +47,7 @@ def get_scores(p, ner_labels_list, full_rep: bool=False, use_crf: bool=False):
 class LSTM_CNN_Trainer:
     def __init__(self,
                  model: LSTMCNNForTokenClassification,
-                 dataset: NERDataset_LSTM_CNN,
+                 dataset: NERDataset_lstm_cnn,
                  **hparam_kwargs):
         self.model = model
         self.dataset = dataset
@@ -68,7 +65,7 @@ class LSTM_CNN_Trainer:
 
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
-    def train(self, use_patience: bool=False, **gen_kwargs):
+    def train(self, use_patience: bool=False,  save: bool=True, **gen_kwargs):
         train_losses = []
         valid_losses = []
         valid_f1 = []
@@ -107,7 +104,9 @@ class LSTM_CNN_Trainer:
             gc.collect()
             torch.cuda.empty_cache()
 
-        # TODO: Save the model
+        if save:
+            self.save_model()
+
 
     def train_epoch(self):
         self.model.train()
@@ -216,17 +215,24 @@ class LSTM_CNN_Trainer:
 
         return result
 
+    def _save(self):
+        
+        output_dir = os.path.join(lstm_cnn_config_data["PATH_TO_MODEL_OUTPUT_DIR"], "{}_{}".format(lstm_cnn_config_data["FEATURE_EXTRACTOR"], datetime.now().strftime("%Y%m%d%H%M%S")))
+
+        os.makedirs(output_dir, exist_ok=True)
+        torch.save(self.model.state_dict(), os.path.join(output_dir, "model.pth"))
+
+    def save_model(self):
+        self._save()
 
 # ---------------------- # Transformer Trainer # ---------------------- #        
 class Transformer_Trainer:
     def __init__(self,
                  model: XLMRobertaForTokenClassification,
                  dataset: NERDataset_transformers,
-                 use_crf: bool=False,
                  **hparam_kwargs):
         self.model = model
         self.dataset = dataset
-        self.use_crf = use_crf
         self.batch_size = int(hparam_kwargs["batch_size"]) if "batch_size" in hparam_kwargs else int(transformers_config_data["BATCH_SIZE"])
         self.num_epochs = int(hparam_kwargs["num_epochs"]) if "num_epochs" in hparam_kwargs else int(transformers_config_data["NUM_EPOCHS"])
         self.learning_rate = float(hparam_kwargs["learning_rate"]) if "learning_rate" in hparam_kwargs else float(transformers_config_data["LEARNING_RATE"])
@@ -291,16 +297,9 @@ class Transformer_Trainer:
             batch = tuple(t.to(self.device) for t in batch)
             input_ids, attention_mask, labels, mask = batch
             self.optimizer.zero_grad()
-            if self.use_crf:
-                outputs = self.model(input_ids=input_ids,
-                                    attention_mask=attention_mask,
-                                    labels=labels,
-                                    mask=mask,
-                                    reduction='mean')
-            else:
-                outputs = self.model(input_ids=input_ids,
-                                    attention_mask=attention_mask,
-                                    labels=labels)
+            outputs = self.model(input_ids=input_ids,
+                                attention_mask=attention_mask,
+                                labels=labels)
             loss = outputs.loss
             epoch_train_loss += loss.item()
 
@@ -329,16 +328,9 @@ class Transformer_Trainer:
             for step, batch in enumerate(pbar):
                 batch = tuple(t.to(self.device) for t in batch)
                 input_ids, attention_mask, labels, mask = batch
-                if self.use_crf:
-                    outputs = self.model(input_ids=input_ids,
-                                        attention_mask=attention_mask,
-                                        labels=labels,
-                                        mask=mask,
-                                        reduction="mean")
-                else:
-                    outputs = self.model(input_ids=input_ids,
-                                        attention_mask=attention_mask,
-                                        labels=labels)
+                outputs = self.model(input_ids=input_ids,
+                                    attention_mask=attention_mask,
+                                    labels=labels)
                 loss = outputs.loss
                 epoch_val_loss += loss.item()
 
@@ -365,23 +357,14 @@ class Transformer_Trainer:
             for step, batch in enumerate(pbar):
                 batch = (t.to(self.device) for t in batch)
                 input_ids, attention_mask, labels, mask = batch
-                if self.use_crf:
-                    outputs = self.model(input_ids=input_ids,
-                                        attention_mask=attention_mask,
-                                        **gen_kwargs)
-                    predictions = outputs.predictions
+                outputs = self.model(input_ids=input_ids,
+                                    attention_mask=attention_mask,
+                                    **gen_kwargs)
+                probabilities = F.softmax(outputs.logits, dim=-1)
+                predictions = probabilities.argmax(dim=-1).cpu().tolist()
 
-                    out_predictions.extend(predictions.cpu().tolist())
-                    gold.extend(labels.cpu().tolist())
-                else:
-                    outputs = self.model(input_ids=input_ids,
-                                        attention_mask=attention_mask,
-                                        **gen_kwargs)
-                    probabilities = F.softmax(outputs.logits, dim=-1)
-                    predictions = probabilities.argmax(dim=-1).cpu().tolist()
-
-                    out_predictions.extend(predictions)
-                    gold.extend(labels.cpu().tolist())
+                out_predictions.extend(predictions)
+                gold.extend(labels.cpu().tolist())
 
         del batch
         del input_ids
@@ -405,8 +388,7 @@ class Transformer_Trainer:
                                             desc=desc,
                                             **gen_kwargs)
         result = get_scores(p=(predictions, gold),
-                            ner_labels_list=self.dataset.dataset.labels,
-                            use_crf=self.use_crf)
+                            ner_labels_list=self.dataset.dataset.labels)
         if log_results:
             test_df = pd.DataFrame(list(zip(gold, predictions)), columns=["ground_truth", "prediction"])
             test_df.to_csv()

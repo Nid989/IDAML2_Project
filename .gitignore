@@ -3,5 +3,8 @@
 /models/__pycache__
 /scripts
 /model_checkpoints
+/optimization_results_lc.pkl
+/optimization_results_t.pkl
 /optimization_results.pkl
 /embeddings/
+/ouptut.log

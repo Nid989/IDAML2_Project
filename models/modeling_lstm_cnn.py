@@ -5,13 +5,13 @@ import torch
 import torch.nn as nn  
 from dataclasses import dataclass, fields
 
-from data_utils import NERDataset_LSTM_CNN 
+from data_utils import NERDataset_lstm_cnn 
 from helpers import lstm_cnn_config_data 
 
 feature_extractor_types_ = Literal["lstm", "cnn"]
 
 # NOTE: should be called before the model initialization
-def prepare_model_config(ner_dataset: Optional[NERDataset_LSTM_CNN]=None):
+def prepare_model_config(ner_dataset: Optional[NERDataset_lstm_cnn]=None, **kwargs):
     lstm_cnn_model_config = {
         "vocab_size": None,
         "num_labels": 1,
@@ -24,16 +24,16 @@ def prepare_model_config(ner_dataset: Optional[NERDataset_LSTM_CNN]=None):
     }
 
     # update feature_extractor
-    lstm_cnn_model_config["feature_extractor"] = lstm_cnn_config_data["FEATURE_EXTRACTOR"]
+    lstm_cnn_model_config["feature_extractor"] = kwargs["feature_extractor"] if "feature_extractor" in kwargs else lstm_cnn_config_data["FEATURE_EXTRACTOR"]
     # update dropout
-    lstm_cnn_model_config["dropout"] = lstm_cnn_config_data["DROPOUT"]
+    lstm_cnn_model_config["dropout"] = kwargs["dropout"] if "dropout" in kwargs else lstm_cnn_config_data["DROPOUT"]
     # update input_dim
-    lstm_cnn_model_config["input_dim"] = lstm_cnn_config_data["INPUT_DIM"]
+    lstm_cnn_model_config["input_dim"] = kwargs["input_dim"] if "input_dim" in kwargs else lstm_cnn_config_data["INPUT_DIM"]
     # update hidden_dim
-    lstm_cnn_model_config["hidden_dim"] = lstm_cnn_config_data["HIDDEN_DIM"]
+    lstm_cnn_model_config["hidden_dim"] = kwargs["hidden_dim"] if "hidden_dim" in kwargs else lstm_cnn_config_data["HIDDEN_DIM"]
     # update n_layers
     if lstm_cnn_config_data["FEATURE_EXTRACTOR"] == "lstm":
-        lstm_cnn_model_config["n_layers"] = lstm_cnn_config_data["N_LAYERS"]
+        lstm_cnn_model_config["n_layers"] = kwargs["n_layers"] if "n_layers" in kwargs else lstm_cnn_config_data["N_LAYERS"]
 
     if ner_dataset is not None:
         # update vocab_size

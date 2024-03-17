@@ -14,12 +14,12 @@ from transformers import (
 from dataset import BC5CDR, MultiCoNER2
 from helpers import load_glove_embeddings
 
-nlp = spacy.load("en_core_web_sm")
+# nlp = spacy.load("en_core_web_sm")
 dataset_types_ = Literal['BC5CDR', 'MultiCoNER2']
 data_types_ = Literal['train', 'valid', 'test']
     
 # ---------------------- # NERDataset for LSTM-CNN # ---------------------- #
-class NERDataset_LSTM_CNN:
+class NERDataset_lstm_cnn:
     def __init__(self, config: Dict, **kwargs):
         self.modeling_type = "lstm_cnn"
         self.dataset_name = config["DATASET_NAME"]
@@ -64,7 +64,8 @@ class NERDataset_LSTM_CNN:
         all_data = list(itertools.chain.from_iterable([getattr(self.dataset, f"{data_type}_data")["tokens"].values.tolist() \
                     for data_type in ["train", "valid"]]))
         if self.lemmatize:
-            all_data = [[token.lemma_ for token in nlp(" ".join(instance))] for instance in all_data]
+            pass
+            # all_data = [[token.lemma_ for token in nlp(" ".join(instance))] for instance in all_data]
         _vocab = torchtext.vocab.build_vocab_from_iterator(all_data,
                                            specials=["<pad>", "<unk>"])
         return _vocab
@@ -83,15 +84,17 @@ class NERDataset_LSTM_CNN:
         dataset_split = getattr(self.dataset, f"{data_type}_data")
 
         if self.rmv_stopwords:
-            dataset_split["tokens"] = dataset_split.apply(
-                lambda row: [token.text for token in nlp(" ".join(row["tokens"])) if not token.is_stop],
-                axis=1
-            )
+            pass
+            # dataset_split["tokens"] = dataset_split.apply(
+            #     lambda row: [token.text for token in nlp(" ".join(row["tokens"])) if not token.is_stop],
+            #     axis=1
+            # )
         if self.lemmatize:
-            dataset_split["tokens"] = dataset_split.apply(
-                lambda row: [token.lemma_ for token in nlp(" ".join(row["tokens"]))],
-                axis=1
-            )
+            pass
+            # dataset_split["tokens"] = dataset_split.apply(
+            #     lambda row: [token.lemma_ for token in nlp(" ".join(row["tokens"]))],
+            #     axis=1
+            # )
         setattr(self.dataset, f"{data_type}_data", dataset_split)
 
         model_inputs = dict()
@@ -145,15 +148,6 @@ class NERDataset_transformers:
         else:
             raise ValueError(f"Invalid dataset-name provided, expected dataset-types are {dataset_types_}")
 
-        # update; self.dataset.labels, self.dataset.labels2idx, & self.dataset.idx2labels
-        if "use_crf" in kwargs:
-            self.use_crf = kwargs["use_crf"]
-            self.dataset.labels = ["<s>", "<pad>", "</s>"] + self.dataset.labels
-            self.dataset.labels2idx = dict(zip(self.dataset.labels, range(len(self.dataset.labels))))
-            self.dataset.idx2labels = dict((idx, label) for label, idx in self.dataset.labels2idx.items())
-        else:
-            self.use_crf = False
-
     def preprocess_data(self, data_type: data_types_="train"):
         dataset_split = getattr(self.dataset, f"{data_type}_data")
 
@@ -178,13 +172,9 @@ class NERDataset_transformers:
                 label_masks = []
                 for index2, word_idx in enumerate(word_ids):
                     if word_idx is None:
-                        if self.use_crf and (index2==0 or word_ids[index2-1] is not None):
-                            label_ids.append(self.dataset.labels2idx["<s>"] if index2==0 else self.dataset.labels2idx["</s>"])
-                            label_masks.append(1)
-                        else:
-                            label_id = self.dataset.labels2idx["<pad>"] if self.use_crf else -100
-                            label_ids.append(label_id)
-                            label_masks.append(0)
+                        label_id = -100
+                        label_ids.append(label_id)
+                        label_masks.append(0)
                     elif label[word_idx] == 0:
                         label_ids.append(0)
                         label_masks.append(1)
@@ -192,12 +182,8 @@ class NERDataset_transformers:
                         label_ids.append(self.dataset.labels2idx[label[word_idx]])
                         label_masks.append(1)
                     else:
-                        if self.use_crf:
-                            label_ids.append(self.dataset.labels2idx[label[word_idx]] if label_all_tokens else self.dataset.labels2idx["<pad>"])
-                            label_masks.append(1 if label_all_tokens else 0)
-                        else:
-                            label_ids.append(self.dataset.labels2idx[label[word_idx]] if label_all_tokens else -100)
-                            label_masks.append(1 if label_all_tokens else 0)
+                        label_ids.append(self.dataset.labels2idx[label[word_idx]] if label_all_tokens else -100)
+                        label_masks.append(1 if label_all_tokens else 0)
                     previous_word_idx = word_idx
                 NER_labels.append(label_ids)
                 NER_labels_mask.append(label_masks)

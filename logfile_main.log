@@ -1,0 +1,21 @@
+2024-03-14 11:43:17,021 - INFO - Using device: cpu
+2024-03-14 11:43:17,022 - INFO - Modeling type: lstm_cnn
+2024-03-14 11:43:17,022 - INFO - Feature extractor utilized: lstm
+2024-03-14 11:50:16,662 - INFO - Using device: cpu
+2024-03-14 11:50:16,663 - INFO - Modeling type: lstm_cnn
+2024-03-14 11:50:16,663 - INFO - Feature extractor utilized: lstm
+2024-03-14 11:50:31,019 - INFO - NER Dataset created
+2024-03-14 11:50:31,020 - INFO - Using TokenClassification model
+2024-03-14 11:50:31,540 - INFO - Training...
+2024-03-14 11:50:36,549 - INFO - Trainer initialized
+2024-03-14 12:15:20,343 - INFO - Using device: cpu
+2024-03-14 12:15:20,344 - INFO - Modeling type: lstm_cnn
+2024-03-14 12:15:20,344 - INFO - Feature extractor utilized: lstm
+2024-03-14 12:15:35,442 - INFO - NER Dataset created
+2024-03-14 12:15:35,443 - INFO - Using TokenClassification model
+2024-03-14 12:15:35,877 - INFO - Training...
+2024-03-14 12:15:37,782 - INFO - Trainer initialized
+2024-03-14 12:16:11,391 - INFO - Training completed
+2024-03-14 12:16:11,392 - INFO - Evaluation...
+2024-03-14 12:16:12,163 - INFO - Measured `f1` score: 0.0, `accuracy` score: 0.7876712328767124
+2024-03-14 12:16:12,164 - INFO - Evaluation completed.

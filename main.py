@@ -3,8 +3,8 @@ import logging
 import torch
 from transformers import AutoTokenizer
 
-from data_utils import NERDataset_LSTM_CNN, NERDataset_transformers
-from models.modeling_xlm_roberta import XLMRobertaForTokenClassification, XLMRobertaCRFForTokenClassification
+from data_utils import NERDataset_lstm_cnn, NERDataset_transformers
+from models.modeling_xlm_roberta import XLMRobertaForTokenClassification
 from models.modeling_lstm_cnn import LSTMCNNForTokenClassification, prepare_model_config
 from helpers import general_config_data, lstm_cnn_config_data, transformers_config_data, print_model_details
 from model_utils import Transformer_Trainer, LSTM_CNN_Trainer
@@ -37,29 +37,18 @@ if __name__ == "__main__":
         ner_dataset = NERDataset_transformers(tokenizer=tokenizer, config=transformers_config_data)
         logger.info("NER Dataset created")
 
-        if transformers_config_data["MODEL_IMPLEMENTATION"] == "tokenclassification":
-            ner_dataset.on_setup(use_crf=False)
-            logger.info("Using TokenClassification model")
-            model = XLMRobertaForTokenClassification.from_pretrained(model_checkpoint,
-                                                                     num_labels=len(ner_dataset.dataset.labels))
-            model.to(device)
-            print_model_details(model)
-
-        elif transformers_config_data["MODEL_IMPLEMENTATION"] == "tokenclassification w/ LC-CRF":
-            ner_dataset.on_setup(use_crf=True)
-            logger.info("Using TokenClassification w/ LC-CRF model")
-            model = XLMRobertaCRFForTokenClassification.from_pretrained(model_checkpoint,
-                                                                        num_labels=len(ner_dataset.dataset.labels))
-            model.to(device)
-            print_model_details(model)
-
-        else:
-            raise ValueError("Invalid MODEL_IMPLEMENTATION value. Please check the transformers_config.yaml file.")
-
+        ner_dataset.on_setup()
+        logger.info("Using TokenClassification model")
+        model = XLMRobertaForTokenClassification.from_pretrained(model_checkpoint,
+                                                                    num_labels=len(ner_dataset.dataset.labels))
+        model.to(device)
+        print_model_details(model)
+ 
         logger.info("Training...")
-        trainer = Transformer_Trainer(model=model,
-                                      dataset=ner_dataset,
-                                      use_crf=ner_dataset.use_crf)
+        trainer = Transformer_Trainer(
+            model=model,
+            dataset=ner_dataset
+        )
         logger.info("Trainer initialized")
         trainer.train(use_patience=False)
         logger.info("Training completed")
@@ -74,12 +63,14 @@ if __name__ == "__main__":
         feature_extractor = lstm_cnn_config_data["FEATURE_EXTRACTOR"]
         logger.info(f"Feature extractor utilized: {feature_extractor}")
 
-        ner_dataset = NERDataset_LSTM_CNN(config=lstm_cnn_config_data,
+        ner_dataset = NERDataset_lstm_cnn(config=lstm_cnn_config_data,
                                           glove_dim=lstm_cnn_config_data["INPUT_DIM"])
         ner_dataset.on_setup()
         logger.info("NER Dataset created")
 
         lstm_cnn_model_config = prepare_model_config(ner_dataset=ner_dataset)
+
+        print(lstm_cnn_model_config)
 
         logger.info("Using TokenClassification model")
         model = LSTMCNNForTokenClassification(config=lstm_cnn_model_config)
