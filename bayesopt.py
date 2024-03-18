@@ -8,6 +8,7 @@ from transformers import (
     AutoTokenizer
 )
 
+import skopt
 from skopt import gp_minimize
 from skopt.space import Real, Integer, Categorical
 from skopt.utils import use_named_args
@@ -15,7 +16,7 @@ from skopt.callbacks import DeltaXStopper
 
 from data_utils import NERDataset_transformers, NERDataset_lstm_cnn
 from helpers import general_config_data, transformers_config_data, lstm_cnn_config_data
-from helpers import save_skopt_results
+from helpers import save_skopt_results, load_skopt_results
 from models.modeling_xlm_roberta import XLMRobertaForTokenClassification
 from models.modeling_lstm_cnn import prepare_model_config, LSTMCNNForTokenClassification
 from model_utils import Transformer_Trainer, LSTM_CNN_Trainer
@@ -156,6 +157,7 @@ def lc_objective_fxn(max_sequence_len: int, batch_size: int, num_epochs: int,
 
 
 if __name__ == "__main__":
+
     modeling_type = general_config_data["MODELING_TYPE"]
     if modeling_type == "transformers":
         logging.info("Start: scikit-optimize `Gaussian-Process` optimization procedure.")
@@ -170,11 +172,12 @@ if __name__ == "__main__":
 
     elif modeling_type == "lstm_cnn":
         logging.info("Start: scikit-optimize `Gaussian-Process` optimization procedure.")
-        res_gp = gp_minimize(lc_objective_fxn, lchp_space, n_calls=15, random_state=42, callback=[DeltaXStopper(0.001)])
+        res_gp = gp_minimize(lc_objective_fxn, lchp_space, n_calls=10, random_state=42, callback=[DeltaXStopper(0.001)])
         logging.info("End: scikit-optimize `Gaussian-Process` optimization procedure.")
 
         best_hyperparams = res_gp.x
         # logging.info("Best Hyperparameters: ", best_hyperparams)
         print(best_hyperparams)
 
+        skopt.dump(res_gp, "skopt_results.pkl")
         save_skopt_results(res_gp, logging=logging)

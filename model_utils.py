@@ -8,7 +8,7 @@ import torch
 import torch.nn.functional as F
 from torch.optim import AdamW
 import torch.utils.checkpoint
-from evaluate import load
+import evaluate
 from transformers.modeling_utils import PreTrainedModel, unwrap_model
 
 from models.modeling_xlm_roberta import XLMRobertaForTokenClassification
@@ -16,7 +16,7 @@ from models.modeling_lstm_cnn import LSTMCNNForTokenClassification
 from data_utils import NERDataset_lstm_cnn, NERDataset_transformers
 from helpers import lstm_cnn_config_data, transformers_config_data
 
-seqeval = load("seqeval")
+seqeval = evaluate.load("seqeval")
 
 def get_scores(p, ner_labels_list, full_rep: bool=False):
     predictions, labels = p
